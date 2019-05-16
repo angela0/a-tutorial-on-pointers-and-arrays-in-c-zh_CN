@@ -1,0 +1,23 @@
+site_name: C 指针与数组
+theme: readthedocs
+
+markdown_extensions:
+    - toc:
+        permalink: true
+    - attr_list
+    - footnotes
+
+nav:
+    - 前言: preface.md
+    - 介绍: introduction.md
+    - Chapter1 什么是指针: chapter1.md
+    - Chapter2 指针类型与数组: chapter2.md
+    - Chapter3 指针与字符串: chapter3.md
+    - Chapter4 再谈字符串: chapter4.md
+    - Chapter5 指针与结构体: chapter5.md
+    - Chapter6 字符串新谈及字符串数组: chapter6.md
+    - Chapter7 再谈多维数组: chapter7.md
+    - Chapter8 指向数组的指针: chapter8.md
+    - Chapter9 指针与动态分配内存: chapter9.md
+    - Chapter10 指向函数的指针: chapter10.md
+    - 尾声: epilog.md
