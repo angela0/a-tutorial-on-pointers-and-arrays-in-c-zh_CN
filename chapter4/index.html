@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Chapter4 再谈字符串 - C 指针与数组</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Chapter4 \u518d\u8c08\u5b57\u7b26\u4e32";
+    var mkdocs_page_input_path = "chapter4.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> C 指针与数组</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../preface/">前言</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../introduction/">介绍</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter1/">Chapter1 什么是指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter2/">Chapter2 指针类型与数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter3/">Chapter3 指针与字符串</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Chapter4 再谈字符串</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter5/">Chapter5 指针与结构体</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter6/">Chapter6 字符串新谈及字符串数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter7/">Chapter7 再谈多维数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter8/">Chapter8 指向数组的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter9/">Chapter9 指针与动态分配内存</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter10/">Chapter10 指向函数的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../epilog/">尾声</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">C 指针与数组</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Chapter4 再谈字符串</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>我们在短时间内进度相当快了，让我们回过头，换个角度看看 Chapter 3 中字符串的拷贝中到底发生了什么。观察下面的函数：</p>
+<pre><code>    char *my_strcpy(char dest[], char source[])
+    {
+        int i = 0;
+        while (source[i] != '\0')
+        {
+            dest[i] = source[i];
+            i++;
+        }
+        dest[i] = '\0';
+        return dest;
+    }
+</code></pre>
+
+<p>再强调一下，字符串就是字符数组。这里我们选择使用数组符号，而不是指针符号来做实际的拷贝。但结果是一样的，也就是用数组和指针都能拷贝字符串。这就引出了我们将要讨论的一个有趣的问题。</p>
+<p>既然参数是传值的，无论你是传递一个字符指针还是像上面的数组名，实际传递过去的就是数组中第一个元素的地址。因此传递过去的参数值是一样的。这样的话，会不会意味着 <code>source[i]</code> 和 <code>(p+i)</code> 是一样的呢？</p>
+<p>实际上确实如此。当我们写 <code>a[i]</code> 的时候，可以替换为 <code>*(a+i)</code>，这没有任何问题。编译时，编译器会生成同样的代码。因此，我们认为指针运算等同于数组索引，或者说语法产生相同的结果。</p>
+<p>但这并<strong>不</strong>意味着指针和数组就是一样的东西，它们不是。只是说，我们表示数组中的一个给定元素时可以有 2 种方法：数组索引和指针，它们得到完全相同的结果。</p>
+<p>现在让我们看看后一个表达式，它的 <code>(a+i)</code> 部分，它使用 <code>+</code> 操作符，是一个简单的加法。根据 C 的语法规则，这种表达式服从交换律，即 <code>(a+i)</code> 等同于 <code>(i+a)</code>。因此，<code>*(i + a)</code> 和 <code>*(a + i)</code>是一样的。</p>
+<p>但 <code>*(i + a)</code> 应该是来源于 <code>i[a]</code>吧。这一切都起因于这个奇怪的事实，假设有：</p>
+<pre><code>    char a[20];
+    int i;
+</code></pre>
+
+<p>并且有</p>
+<pre><code>    a[3] = 'x';
+</code></pre>
+
+<p>这和下面的语句是一样的：</p>
+<pre><code>    3[a] = 'x';
+</code></pre>
+
+<p>试试看！建一个字符数组、整型数组等等都可以。并用传统的方法给第三或第四个元素赋一个值。可以先打印一下这个值，看看赋值操作是否进行。然后像上面那样翻转数组符号。一个良好的编译器是不会报错，并得到相同的结果。一个奇怪的东西..没有别的！</p>
+<p>现在看看上面的函数，我们写了这样一个语句：</p>
+<pre><code>    dest[i] = source[i];
+</code></pre>
+
+<p>由于数组索引和指针运算得到相同的结果，那我们也可以这样写：</p>
+<pre><code>    *(dest + i) = *(source + i);
+</code></pre>
+
+<p>但是，这里有 2 个都有 i 参与的加法。说句题外话，一般来讲，会比自增（如 <code>i++</code> 里面的 ++）花费更多的时间。但对于现代带有优化的编译器可能不对，并不能确定。因此，指针版本要比数组版本快上些许。</p>
+<p>另外一个能加快指针版本速度的方法是把：</p>
+<pre><code>    while (*source != '\0')
+</code></pre>
+
+<p>简化成：</p>
+<pre><code>    while (*source)
+</code></pre>
+
+<p>因为括号里面的值是要到 <strong>0</strong>（FALSE）。</p>
+<p>这时，你可能想要自己写一些使用指针的程序体验一把。处理字符串是实验的好方法，你也许想要实现自己的标准函数版本，如下面几个：</p>
+<pre><code>    strlen();
+    strcat();
+    strchr();
+</code></pre>
+
+<p>或者其他你的系统上有的。</p>
+<p>我们在未来的章节还会谈到字符串以及通过指针来操作字符串。但现在，让我们谈一下结构体吧。</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../chapter5/" class="btn btn-neutral float-right" title="Chapter5 指针与结构体">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../chapter3/" class="btn btn-neutral" title="Chapter3 指针与字符串"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../chapter3/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../chapter5/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

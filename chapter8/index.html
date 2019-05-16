@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Chapter8 指向数组的指针 - C 指针与数组</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Chapter8 \u6307\u5411\u6570\u7ec4\u7684\u6307\u9488";
+    var mkdocs_page_input_path = "chapter8.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> C 指针与数组</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../preface/">前言</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../introduction/">介绍</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter1/">Chapter1 什么是指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter2/">Chapter2 指针类型与数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter3/">Chapter3 指针与字符串</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter4/">Chapter4 再谈字符串</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter5/">Chapter5 指针与结构体</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter6/">Chapter6 字符串新谈及字符串数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter7/">Chapter7 再谈多维数组</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Chapter8 指向数组的指针</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter9/">Chapter9 指针与动态分配内存</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter10/">Chapter10 指向函数的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../epilog/">尾声</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">C 指针与数组</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Chapter8 指向数组的指针</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>指针当然是可以“指向”所有类型的数据对象，包括数组。然而很明显，当我们讨论 program 3.1 的时候，问题扩展成多维数组的话我们该怎么做，这很重要。</p>
+<p>回顾一下，在 Chapter 2 我们说，给定一个整型数组，我们可以用整型指针指向这个数组：</p>
+<pre><code>    int *ptr;
+    ptr = &amp;my_array[0];     /* point our pointer at the first
+                            integer in our array */
+</code></pre>
+
+<p>就像我们声明的那样，指针的类型必须和数组第一个元素的类型一样。</p>
+<p>此外，我们可以设计一个处理数组的函数，用指针作为形参。如这样：</p>
+<pre><code>    int array[3] = {'1', '5', '7'};
+    void a_func(int *p);
+</code></pre>
+
+<p>有的参数可能会写成这样：</p>
+<pre><code>    void a_func(int p[]);
+</code></pre>
+
+<p>这会告诉别人这个函数是用来处理数组的元素。当然，不管哪种情况传过去的都是指向数组第一个元素的指针，和在函数原型或者定义中使用哪种符号无关（<code>int *p</code> 或者 <code>int p[]</code>）。需要注意到的是，如果我们用了数组符号，并不需要将传递数组的实际大小，因为我们不是要传递整个数组，只是第一个元素的地址。</p>
+<p>我们现在将问题转向二维数组。就像我们上一章说的那样，C 会把二维数组解释为一维数组的数组。在那个例子中，二维整型数组的第一个元素是一个一维整型数组。并且，指向二维数组的指针必须是这种数据类型。实现这个的一种方法是使用关键字 “typedef”，它会给指定的数据类型分配一个新名字。如：</p>
+<pre><code>    typedef unsigned char byte;
+</code></pre>
+
+<p>因为 <code>byte</code> 就是 <code>unsigned char</code>，因此：</p>
+<pre><code>    byte b[10]; //会是一个unsigned characters类型的数组
+</code></pre>
+
+<p>注意到，在 typedef 声明中，<code>byte</code> 取代了我们正常使用的 <code>unsigned char</code>。可以看出，typedef 的使用规则是，这个数据类型的新名字就是在这个数据类型定义中用的名字。因此，在：</p>
+<pre><code>    typedef int Array[10];
+</code></pre>
+
+<p><code>Array</code> 成了包含10个整数的数组类型，如 <code>Array my_arr;</code> 声明了变量 <code>my_arr</code>，它是一个含有 10 个整数空间的数组；还有 <code>Array arr2d[5];</code>，它是一个二维数组，含有 5 个元素，每个元素是一个 10 个整数的数组。</p>
+<p>另外，注意到<code>Array *p1d;</code> 会声明一个指向 10 个整数的数组的指针。因为 <code>p1d</code> 指向的类型和 <code>arr2d</code> 相同，所以把二维数组 <code>arr2d</code> 的地址赋给指向包含 10 个整数的一维数组的指针 <code>p1d</code> 是可以接受的。即 <code>p1d = &amp;arr2d[0];</code> 或者 <code>p1d = arr2d;</code>都是正确的。</p>
+<p>既然我们使用的指针的类型是 10 个整数的数组，我们期望 <code>p1d+1</code> 会增加 <code>10*sizeof(int)</code>，它确实是这样。也就是说，<code>sizeof(*p1d)</code> 就是 20。你可以写一个简单的程序验证一下。</p>
+<p>当使用 typedef 的时候，读者读起来会很清晰，程序员也会很方便，但它却不是必须的。我们需要不使用 <code>typedef</code> 关键字来声明一个像 <code>p1d</code> 这样的指针。事实证明确实可以，这样：</p>
+<pre><code>    int (*p1d)[10];
+</code></pre>
+
+<p>就是正确的做法。这里 <code>p1d</code> 就是一个指向 10 个整数的数组的指针，和上面使用 Array 声明的一样。但请注意，这个：</p>
+<pre><code>    int *p1d[10];
+</code></pre>
+
+<p>是不一样的，这个 <code>p1d</code> 是含有 10 个 <code>int</code> 类似指针的数组名。</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../chapter9/" class="btn btn-neutral float-right" title="Chapter9 指针与动态分配内存">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../chapter7/" class="btn btn-neutral" title="Chapter7 再谈多维数组"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../chapter7/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../chapter9/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

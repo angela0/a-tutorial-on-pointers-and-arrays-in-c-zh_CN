@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Chapter3 指针与字符串 - C 指针与数组</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Chapter3 \u6307\u9488\u4e0e\u5b57\u7b26\u4e32";
+    var mkdocs_page_input_path = "chapter3.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> C 指针与数组</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../preface/">前言</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../introduction/">介绍</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter1/">Chapter1 什么是指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter2/">Chapter2 指针类型与数组</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Chapter3 指针与字符串</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter4/">Chapter4 再谈字符串</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter5/">Chapter5 指针与结构体</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter6/">Chapter6 字符串新谈及字符串数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter7/">Chapter7 再谈多维数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter8/">Chapter8 指向数组的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter9/">Chapter9 指针与动态分配内存</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter10/">Chapter10 指向函数的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../epilog/">尾声</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">C 指针与数组</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Chapter3 指针与字符串</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>字符串的学习能够让我们深入融合指针和数组的关系。也更加容易说明一些标准 C 字符串函数如何执行。最后，它能说明什么时候我们能够和应该给函数传递指针。</p>
+<p>在 C 里面，字符串是一个字符输出。在其他语言里面不一定是这样。在 BASIC、Pascal、Fortran 以及其他一些语言里面，字符串是一种单独的数据类型。但在 C 中，字符串就是一个以 zero 字符（写作 <code>'\0'</code>）结尾的字符数组。为了开始我们的讨论，我们会先写一些代码，这些代码只为了说明问题，实际中可能不会用到。看看这段代码：</p>
+<pre><code>    char my_string[40];
+    my_string[0] = 'T';
+    my_string[1] = 'e';
+    my_string[2] = 'd':
+    my_string[3] = '\0';
+</code></pre>
+
+<p>虽然不会有人这样建立一个字符串，但一个以 <em>nul字符结尾</em> 的字符数组最终结果就是一个字符串。因为根据定义，以 <em>nul字符结尾</em>  的字符数组就是一个字符串。注意这里 <code>nul</code>，和 <code>NULL</code> 并不一样。<code>nul</code> 指的是转义的 0（<code>'\0'</code>），所以它要占用一个字节的内存。而 <code>NULL</code>，用于初始化 null 指针的宏定义。<code>NULL</code> 在你用的 C 编译器的某个头文件中以 <code>#define</code> 的方式定义，而 <code>nul</code> 可能没有。</p>
+<p>既然上面这种写法很浪费时间，C 语言也允许下面这 2 种写法。第一个，这样写：</p>
+<pre><code>    char my_string[40] = {'T', 'e', 'd', '\0',};
+</code></pre>
+
+<p>但这似乎还是多敲这么多字符，不太方便。所以，C 也允许这种写法：</p>
+<pre><code>    char my_string[40] = &quot;Ted&quot;;
+</code></pre>
+
+<p>当我们使用双引号，而不是单引号，像上面这个例子一样，nul 字符（<code>'\0'</code>）会被自动加在字符串尾。</p>
+<p>在上面 3 个例子中，结果都是一样的。编译器会留出 40 字节的空间去存放字符，并将前 4 字节初始化为 <code>Ted\0</code>。</p>
+<p>看看下面这段程序：</p>
+<pre><code>    ------------------program 3.1-------------------------------------
+    /* Program 3.1 from PTRTUT10.HTM 6/13/97 */
+    #include &lt;stdio.h&gt;
+    char strA[80] = &quot;A string to be used for demonstration purposes&quot;;
+    char strB[80];
+    int main(void)
+    {
+        char *pA;   /* a pointer to type character */
+        char *pB;   /* another pointer to type character */
+        puts(strA); /* show string A */
+        pA = strA;  /* point pA at string A */
+        puts(pA);   /* show what pA is pointing to */
+        pB = strB;  /* point pB at string B */
+        putchar('\n');      /* move down one line on the screen */
+        while(*pA != '\0')  /* line A (see text) */
+        {
+            *pB++ = *pA++;  /* line B (see text) */
+        }
+        *pB = '\0';         /* line C (see text) */
+        puts(strB);         /* show strB on screen */
+        return 0;
+    }
+    --------- end program 3.1 -------------------------------------
+</code></pre>
+
+<p>在上面的代码中，我们一开始定义了 2 个 80 字符长的字符数组。因为是全局变量，它们会先被初始化为 <code>'\0'</code>，然后 <code>strA</code> 的前 42 字节被初始化为引号里面的字符串。</p>
+<p>现在看看代码，我们声明了 2 个字符指针，并把字符串打印到屏幕上。然后用 <code>pA</code> “指向”了 <code>strA</code>。也就是说，我们通过赋值运算符把 <code>strA[0]</code> 的地址给了变量 <code>pA</code>。然后用 <code>puts()</code> 函数把 <code>pA</code> 指向的内容打印到屏幕上。这里看看函数 <code>puts()</code> 的原型：</p>
+<pre><code>    int puts(const char *s);
+</code></pre>
+
+<p>暂时忽略这个 <code>const</code>，发现传给 <code>puts()</code> 的参数是一个指针，也就是指针的值（因为 C 语言的参数是传值的），并且指针的值就是它所指向的地址，或者简单的说就是一个地址。因此，当我们写 <code>puts(strA);</code> 时，如我们所见，我们把 <code>strA[0]</code> 的地址传递了过去。</p>
+<p>同样，如果我们写了 <code>puts(pA);</code>，会传递过去相同的地址，因为我们前面有这句话：<code>pA = strA;</code>。</p>
+<p>这样，一直到 line A 处的 <code>while()</code> 语句。line A 处表示：只要 <code>pA</code> 指向的字符（即 <code>*pA</code>）不是 nul 字符（即终止符<code>'\0'</code>），就：</p>
+<p>把 <code>pA</code> 指向的字符拷贝到 <code>pB</code> 指向的空间，并自增 <code>pA</code> 使其指向下一个字符，自增 <code>pB</code> 指向下一个空间。</p>
+<p>当我们拷贝完最后一个字符的时候，<code>pA</code> 指向 nul 字符，循环就会结束。然而我们没有拷贝 <code>'\0'</code>。但是根据定义字符串<strong>必须</strong>以 nul 字符结尾，所以在 line C  处我们手动加上了 <code>'\0'</code>。</p>
+<p>如果能用单步调试运行这段程序，并观察 <code>strA</code>，<code>strB</code>，<code>pA</code> 以及 <code>pB</code>，那将十分有教育性。如果能在定义 <code>strB[]</code> 的时候如下初始化就更好了：</p>
+<pre><code>    strB[80] = &quot;12345678901234567890123456789012345678901234567890&quot;
+</code></pre>
+
+<p>这里数字的数量要比 <code>strA</code> 的长度长一些。重复单步调试的步骤并观察那几个变量。试试吧。</p>
+<p>回头说说 <code>puts()</code> 的原型，这个 <code>const</code> 被用作参数修饰，告诉用户这个函数是不会修改该指针指向的字符串，也就是把这个字符串当作常量。</p>
+<p>当然，上面的代码只是展示了一种拷贝字符串的简单方法。把玩一下这段代码，到你能对它发生了什么有一个好的理解之后，我们就能够创建自己的 <code>strcpy()</code> 函数了。它大概就是这个样子：</p>
+<pre><code>    char *my_strcpy(char *destination, char *source)
+    {
+        char *p = destination;
+        while (*source != '\0')
+        {
+            *p++ = *source++;
+        }
+        *p = '\0';
+        return destination;
+    }
+</code></pre>
+
+<p>在这个例子中，我遵从标准程序中返回一个指针的惯例。</p>
+<p>重申一遍，这个函数被设计成接收 2 个字符指针的值，也就是地址，因此前面的程序中可以这样写：</p>
+<pre><code>    int main(void)
+    {
+        my_strcpy(strB, strA);
+        puts(strB);
+    }
+</code></pre>
+
+<p>其实在上面的 <code>my_strcpy()</code> 函数中，我稍稍偏离了标准 C 的格式，它事实上的原型应该是这样：</p>
+<pre><code>    char *my_strcpy(char *destination, const char *source);
+</code></pre>
+
+<p>这里的 <code>const</code> 修饰确保这个函数不会修改 <code>source</code> 指针指向的内容。你可以像上面那样加上 <code>const</code> 修饰证实一下。然后在函数里面，你可以增加一个尝试修改 <code>source</code> 指针所指内容的语句，像这样：</p>
+<pre><code>    *source = 'X';
+</code></pre>
+
+<p>这句话是把字符串的第一个字符改为 <code>X</code>，因为 <code>const</code> 的原因，你的编译器会捕捉到这个错误。试试看。</p>
+<p>现在，让我们看看上面示例中的一些问题。首先，你应该明白， <code>*ptr++</code> 被理解成返回 <code>ptr</code> 指向的值并且自增 <code>ptr</code> 的值。这和运算符的优先级有关。如果我们写成 <code>(*ptr)++</code>，则会自增 <code>ptr</code> 指向的值，而不是 <code>ptr</code> 的值。比如，我们把它用在上面样例字符串的第一个字符，'T' 会变成 'U'。你可以写一些简单的样例代码验证一下。</p>
+<p>再次强调，字符串不是别的东西，就是一个结尾为 '\0' 的字符数组。我们前面做的只是拷贝字符串。它恰好是字符串数组，不过这个方法也用在 int 数组、double 数组上面。但在这些数组中，因为不是字符串，所有没有必要在尾部加上像 nul 字符这样的特殊值。但我们可以实现一个这样的版本，依靠一个特殊值来标识结尾。如，我们拷贝一个正整数数组，可以在尾部标记一个负数。另外，我们写一个函数来拷贝一个数组，不是字符串，可以和数组地址一起把元素个数传递过去，这十分有用。比如，可以像下面这个声明原型一样：</p>
+<pre><code>    void int_copy(int *ptrA, int *ptrB, int nbr);
+</code></pre>
+
+<p>这里的 <code>nbr</code> 是将要被拷贝的整数个数。你可能像实验一下这个想法。创建一个整数数组，看看你能不能写出能正确工作的 <code>int_copy()</code> 函数。</p>
+<p>有了指针，就允许用函数来处理大的数组。比如，假如我们有一个 5000 个整数的数组，并且要用函数处理，我们可以只传递数组的指针（和一些如上面提到的 <code>nbr</code> 这样的辅助信息，这取决你你在做什么）。这个数组本身并没有传递过去。也就是说，整个数组没有在调用函数的时候被复制放到栈里面，而只有它的地址。</p>
+<p>这跟传递一个整数给函数不一样。当我们传递一个整数的时候，我们拷贝了一份这个整数。就是取得整数的值，并放到栈里面。在函数里面操作传过来的值对原来的值没有影响。但对于数组和指针，我们可以传递变量的地址，因此可以操作原来变量的值。</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../chapter4/" class="btn btn-neutral float-right" title="Chapter4 再谈字符串">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../chapter2/" class="btn btn-neutral" title="Chapter2 指针类型与数组"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../chapter2/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../chapter4/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

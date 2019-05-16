@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>前言 - C 指针与数组</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u524d\u8a00";
+    var mkdocs_page_input_path = "preface.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> C 指针与数组</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">前言</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#_1">前言</a></li>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../introduction/">介绍</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter1/">Chapter1 什么是指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter2/">Chapter2 指针类型与数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter3/">Chapter3 指针与字符串</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter4/">Chapter4 再谈字符串</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter5/">Chapter5 指针与结构体</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter6/">Chapter6 字符串新谈及字符串数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter7/">Chapter7 再谈多维数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter8/">Chapter8 指向数组的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter9/">Chapter9 指针与动态分配内存</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter10/">Chapter10 指向函数的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../epilog/">尾声</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">C 指针与数组</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>前言</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h3 id="_1">前言<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>这个文档的目的是向C语言新手介绍指针。通过这几年听到或者参与到的关于C的讨论中，包括 FidoNet 和 UseNet，我注意到很多C语言新手很难理解指针的基本概念。因此我试着用包含大量例子的白话去解释他们。</p>
+<p>这个文档的第一版放在了公共域，和这个一样。Bob Scout 把它做成一个 <em>PTR-HELP.TXT</em> 文件放在了他广泛收集的 <em>SNIPPETS</em> 集里。 从原始的1995版本之后，在原来的基础上我添加了相当数量的材料并做了一些简要的修正。</p>
+<p>随后，1998年左右发我在我的网站上布了一个HTML版本：</p>
+<p><a href="http://pweb.netcom.com/~tjensen/ptr/cpoint.htm">http://pweb.netcom.com/~tjensen/ptr/cpoint.htm</a></p>
+<p>在许多人的要求下，我最终放出了PDF版本。它跟上面链接中的HTML版本是一样的，同样可以在该网站中获取到。</p>
+<p><strong>感谢</strong>：</p>
+<p>由于在 FidoNet C Echo，UseNet Newsgroup comp.lang.c，或者其他网路上的论坛（这里不再一一列出）贴出的问题，许多人不知不觉地贡献了这份文档。尤其要感谢 Bob Scout，很感激他把第一版的材料放在了他的 <em>SNIPPETS</em> 文件里。</p>
+<p><strong>关于作者</strong>：</p>
+<p>Ted Jensen 是一个退休的电子工程师，曾经在磁记录领域做过硬件设计以及其经理。自从1968年学习给用于在大型机上运行子任务的纸带打孔，编程便成为了他时不时的一大爱好。（这种主机拥有64K的磁介内存）</p>
+<p><strong>使用</strong>：</p>
+<p>文档里包含的一切内容，都放出到了 <strong>Plblic Domain</strong>，<strong>任何人</strong>都能拷贝或者以你们自己愿意的方式贡献这份文档。我唯一的要求是，文档如果被用于课堂上的教学目的，如果你能将它完整分发出去（也就是说，包括所有章节，前言以及介绍）我将感激不尽。另外，在上述情况下，如果你能够给我下面留有的地址发一个便言，我会更加感激。毕竟我写这个的目的是希望它对别人有用，既然我不计报酬，唯一的希望是从那些认为这个材料有用的人的反馈让我知道目标至少部分达到了。</p>
+<p>Ted Jensen</p>
+<p>Redwood City, California</p>
+<p>tjensen@ix.netcom.com</p>
+<p>July 1998</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../introduction/" class="btn btn-neutral float-right" title="介绍">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+        <span style="margin-left: 15px"><a href="../introduction/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

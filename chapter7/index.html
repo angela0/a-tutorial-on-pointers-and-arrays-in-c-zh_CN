@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Chapter7 再谈多维数组 - C 指针与数组</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Chapter7 \u518d\u8c08\u591a\u7ef4\u6570\u7ec4";
+    var mkdocs_page_input_path = "chapter7.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> C 指针与数组</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../preface/">前言</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../introduction/">介绍</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter1/">Chapter1 什么是指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter2/">Chapter2 指针类型与数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter3/">Chapter3 指针与字符串</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter4/">Chapter4 再谈字符串</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter5/">Chapter5 指针与结构体</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter6/">Chapter6 字符串新谈及字符串数组</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Chapter7 再谈多维数组</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter8/">Chapter8 指向数组的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter9/">Chapter9 指针与动态分配内存</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter10/">Chapter10 指向函数的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../epilog/">尾声</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">C 指针与数组</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Chapter7 再谈多维数组</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>在前一章中，我们注意到给定：</p>
+<pre><code>    #define ROWS 5
+    #define COLS 10
+
+    int multi[ROWS][COLS];
+</code></pre>
+
+<p>我们访问 <code>mutil</code> 中的某一元素时，可以通过：</p>
+<pre><code>    multi[row][col]
+</code></pre>
+
+<p>或者：</p>
+<pre><code>    *(*(multi + row) + col)
+</code></pre>
+
+<p>为了全面理解到底发生了什么，我们把：</p>
+<pre><code>    *(multi + row)
+</code></pre>
+
+<p>替换成 <code>X</code>，像这样：</p>
+<pre><code>    *(X + col)
+</code></pre>
+
+<p>现在，从这里看，<code>X</code> 像一个指针，因为我们使用了逆引用，并且 <code>col</code> 是一个整数。这里用到的是一种特殊的运算，叫做指针运算。这意味着，因为我们说的是整型数组，那么 <code>X + col + 1</code> 指向的地址（即 <code>X + col + 1</code> 的值）一定比 <code>X + col</code> 指向的地址大，并且大 <code>sizeof(int)</code>。</p>
+<p>既然我们知道二维数组在内存中的布局，那么我们能够计算出，如在上面用到的表达式 <code>multi + row</code> 基础上，<code>multi + row + 1</code> 一定增加了能够指向下一行的数值，在这个例子中等于 <code>COLS * sizeof(int)</code>。</p>
+<p>也就是说，如果在运行时表达式 <code>*(*(multi + row) + col)</code> 被正确计算，那编译器生成的代码必须考虑到 <code>COLS</code> 的值，即第二维。因为 2 中形式的表达式是等价的，这里无论是用指针表达式还是数组表达式 <code>multi[row][col]</code> 都是正确的。</p>
+<p>因此，无论计算哪种表达式，这 5 个值必须知道：</p>
+<ol>
+<li>第一个元素的地址，它被表达式 <code>multi</code> 返回，即数组的名字</li>
+<li>数组元素类型的大小，这个例子是 <code>sizeof(int)</code></li>
+<li>数组的第二维</li>
+<li>第一维度的给定索引值，这个例子是 <code>row</code></li>
+<li>第二维度的给定索引值，这个例子是 <code>col</code></li>
+</ol>
+<p>这些都给出以后，想想如何设计一个函数去处理前面声明的数组的元素。例如，将数组 <code>multi</code> 的每一个元素设置为 1。</p>
+<pre><code>    void set_value(int m_array[][COLS])
+    {
+        int row, col;
+        for (row = 0; row &lt; ROWS; row++)
+        {
+            for (col = 0; col &lt; COLS; col++)
+            {
+                m_array[row][col] = 1;
+            }
+        }
+    }
+</code></pre>
+
+<p>我们可以这样调用这个函数：</p>
+<pre><code>    set_value(multi);
+</code></pre>
+
+<p>现在，我们在函数里面使用 <code>#define</code> 定义了 <code>ROWS</code>  和 <code>COLS</code> ，它们是循环的终止条件。但是宏定义仅仅是只有编译器关心的常量，也就是说，在函数里面不会把它们和数组大小联系起来。当然，<code>row</code> 和 <code>col</code> 是局部变量。形参的定义允许编译器在运行时计算与传过来的指针相关的特征值，因此我们不需要第一维。正如后面看到的那样，我们没有在参数里面定义它。出于习惯和一致性，我这里没有用它。但是，第二维一定得在参数里面写出来，这是因为我们需要它来计算 <code>m_array[row][col]</code>。既然参数定义了数据类型（这个例子是 <code>int</code>）并且迭代变量在 for 循环中定义了，那么只有一个值可以只用一个参数传过来。在这个例子中，就是 <code>mutil</code> 的值，像调用语句写的那样，即第一个元素的地址，它经常被叫做这个数组的指针。因此，我们告诉编译器第二维的唯一途径就是把它明确地加在参数定义里面。</p>
+<p>实际上，一般在处理多维数组的时候，所有大于一维的维度都是需要的。比如我们讨论三维数组的时候，第二维<strong>和</strong>第三维都需要在参数定义中写明。</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../chapter8/" class="btn btn-neutral float-right" title="Chapter8 指向数组的指针">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../chapter6/" class="btn btn-neutral" title="Chapter6 字符串新谈及字符串数组"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../chapter6/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../chapter8/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

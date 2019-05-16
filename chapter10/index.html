@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Chapter10 指向函数的指针 - C 指针与数组</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Chapter10 \u6307\u5411\u51fd\u6570\u7684\u6307\u9488";
+    var mkdocs_page_input_path = "chapter10.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> C 指针与数组</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../preface/">前言</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../introduction/">介绍</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter1/">Chapter1 什么是指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter2/">Chapter2 指针类型与数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter3/">Chapter3 指针与字符串</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter4/">Chapter4 再谈字符串</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter5/">Chapter5 指针与结构体</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter6/">Chapter6 字符串新谈及字符串数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter7/">Chapter7 再谈多维数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter8/">Chapter8 指向数组的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter9/">Chapter9 指针与动态分配内存</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Chapter10 指向函数的指针</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../epilog/">尾声</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">C 指针与数组</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Chapter10 指向函数的指针</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>到这里，我们已经讨论过指向数据对象的指针。C 里面也允许声明指针函数的指针。函数指针有很多用途，这里讨论一部分。</p>
+<p>考虑一下这个实际问题。你想写一个函数，它能够实际地排序任何数据集合，这些数据存储在数组中。可能会是字符串数组、整型数组、浮点数数组，甚至是结构体数组。排序算法对所有的类型都是一样的。例如，可以是简单的冒泡排序，或者是更复杂的希尔排序、快速排序等。为了演示目的，我们就用一个简单的冒泡排序。</p>
+<p>Sedgewick<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>曾经用 C 通过构建函数来实现冒泡排序，传给函数一个数组的指针，就能被排序。如果我们把这个函数叫做 <code>bubble()</code>，排序程序就像下面 <code>bubble_1.c</code> 描述的那样：</p>
+<pre><code>    /*-------------------- bubble_1.c --------------------*/
+    /* Program bubble_1.c from PTRTUT10.HTM 6/13/97 */
+    #include &lt;stdio.h&gt;
+    int arr[10] = { 3,6,1,2,3,8,4,1,7,2};
+    void bubble(int a[], int N);
+    int main(void)
+    {
+        int i;
+        putchar('\n');
+        for (i = 0; i &lt; 10; i++)
+        {
+            printf(&quot;%d &quot;, arr[i]);
+        }
+        bubble(arr,10);
+        putchar('\n');
+        for (i = 0; i &lt; 10; i++)
+        {
+            printf(&quot;%d &quot;, arr[i]);
+        }
+        return 0;
+    }
+    void bubble(int a[], int N)
+    {
+        int i, j, t;
+        for (i = N-1; i &gt;= 0; i--)
+        {
+            for (j = 1; j &lt;= i; j++)
+            {
+                if (a[j-1] &gt; a[j])
+                {
+                    t = a[j-1];
+                    a[j-1] = a[j];
+                    a[j] = t;
+                }
+            }
+        }
+    }
+    /*---------------------- end bubble_1.c -----------------------*/
+</code></pre>
+
+<p>冒泡排序是一种比较简单的排序。这个算法从第二个扫描到最后一个元素，并把每一个元素都和它前面的元素比较。如果前面的那个比当前的大，就交换它们，使得最大的元素离尾部越来越近。在第一趟排序中，这会让最大的元素移到数组尾部。现在数组仅限于除了最后一个元素的所有元素，重复上面的过程，这会把第二大的元素放到最大的元素之前。这个过程一直重复元素个数减 1 次。最后得到一个排序后的数组。</p>
+<p>这里我们的函数用来排序整型数组。因此在循环中的第 1 行我们比较整数大小，第 2 到 4 行用了一个临时整数。现在，我们想要的是看看能不能把这个函数改造成用于任何数据类型，而不只限制在整型。</p>
+<p>同时，我们并不想每次使用这个都分析算法与之相关的代码。因此我们着手把比较移出函数 <code>bubble()</code>，以便于我们修改比较功能，而不用重写与实际算法相关的部分。这就有了 <code>bubble_2.c</code>：</p>
+<pre><code>    /*---------------------- bubble_2.c -------------------------*/
+    /* Program bubble_2.c from PTRTUT10.HTM 6/13/97 */
+    /* Separating the comparison function */
+    #include &lt;stdio.h&gt;
+    int arr[10] = { 3,6,1,2,3,8,4,1,7,2};
+    void bubble(int a[], int N);
+    int compare(int m, int n);
+    int main(void)
+    {
+        int i;
+        putchar('\n');
+        for (i = 0; i &lt; 10; i++)
+        {
+            printf(&quot;%d &quot;, arr[i]);
+        }
+        bubble(arr,10);
+        putchar('\n');
+        for (i = 0; i &lt; 10; i++)
+        {
+            printf(&quot;%d &quot;, arr[i]);
+        }
+        return 0;
+    }
+    void bubble(int a[], int N)
+    {
+        int i, j, t;
+        for (i = N-1; i &gt;= 0; i--)
+        {
+            for (j = 1; j &lt;= i; j++)
+            {
+                if (compare(a[j-1], a[j]))
+                {
+                    t = a[j-1];
+                    a[j-1] = a[j];
+                    a[j] = t;
+                }
+            }
+        }
+    }
+    int compare(int m, int n)
+    {
+        return (m &gt; n);
+    }
+    /*--------------------- end of bubble_2.c -----------------------*/
+</code></pre>
+
+<p>如果我们的目标是让排序程序的数据类型独立，一种方法就是使用 void 指针指向这个数据，而不是用整型。为了朝这个方向迈出第一步，让我们修改一些内容使得我们可以使用指针。一开始，我们先使用整型指针：</p>
+<pre><code>    /*----------------------- bubble_3.c -------------------------*/
+    /* Program bubble_3.c from PTRTUT10.HTM 6/13/97 */
+    #include &lt;stdio.h&gt;
+    int arr[10] = { 3,6,1,2,3,8,4,1,7,2};
+    void bubble(int *p, int N);
+    int compare(int *m, int *n);
+    int main(void)
+    {
+        int i;
+        putchar('\n');
+        for (i = 0; i &lt; 10; i++)
+        {
+            printf(&quot;%d &quot;, arr[i]);
+        }
+        bubble(arr,10);
+        putchar('\n');
+        for (i = 0; i &lt; 10; i++)
+        {
+            printf(&quot;%d &quot;, arr[i]);
+        }
+        return 0;
+    }
+    void bubble(int *p, int N)
+    {
+        int i, j, t;
+        for (i = N-1; i &gt;= 0; i--)
+        {
+            for (j = 1; j &lt;= i; j++)
+            {
+                if (compare(&amp;p[j-1], &amp;p[j]))
+                {
+                    t = p[j-1];
+                    p[j-1] = p[j];
+                    p[j] = t;
+                }
+            }
+        }
+    }
+    int compare(int *m, int *n)
+    {
+        return (*m &gt; *n);
+    }
+    /*------------------ end of bubble3.c -------------------------*/
+</code></pre>
+
+<p>请注意变化。我们现在传递了一个整型指针（或者叫整型数组）给 <code>bubble()</code>。并且在 <code>bubble()</code> 中，我们给比较函数传递了指向数组元素的指针。最后，当然我们在 <code>compare()</code> 中解引用了这些指针，使得我们可以做比较。下一步就是要把 <code>bubble()</code> 传给 <code>compare()</code> 的指针变成 void 指针，使得这个函数变得类型无关。这在 <code>bubble_4</code> 中体现：</p>
+<pre><code>    /*------------------ bubble_4.c ----------------------------*/
+    /* Program bubble_4.c from PTRTUT10,HTM 6/13/97 */
+    #include &lt;stdio.h&gt;
+    int arr[10] = { 3,6,1,2,3,8,4,1,7,2};
+    void bubble(int *p, int N);
+    int compare(void *m, void *n);
+    int main(void)
+    {
+        int i;
+        putchar('\n');
+        for (i = 0; i &lt; 10; i++)
+        {
+            printf(&quot;%d &quot;, arr[i]);
+        }
+        bubble(arr,10);
+        putchar('\n');
+        for (i = 0; i &lt; 10; i++)
+        {
+            printf(&quot;%d &quot;, arr[i]);
+        }
+        return 0;
+    }
+    void bubble(int *p, int N)
+    {
+        int i, j, t;
+        for (i = N-1; i &gt;= 0; i--)
+        {
+            for (j = 1; j &lt;= i; j++)
+            {
+                if (compare((void *)&amp;p[j-1], (void *)&amp;p[j]))
+                {
+                    t = p[j-1];
+                    p[j-1] = p[j];
+                    p[j] = t;
+                }
+            }
+        }
+    }
+    int compare(void *m, void *n)
+    {
+        int *m1, *n1;
+        m1 = (int *)m;
+        n1 = (int *)n;
+        return (*m1 &gt; *n1);
+    }
+    /*------------------ end of bubble_4.c ---------------------*/
+</code></pre>
+
+<p>现在要注意，这样做的时候我们必须把 <code>compare()</code> 中的 void 指针转换成实际排序的类型。但如你看到的，这样是可以的。既然我们传给 <code>bubble()</code> 的仍然是整型数组的指针。那么当我们把它们作为参数传给 <code>compare()</code> 的时候，就必须强制转换为 void 指针。</p>
+<p>现在我们把问题定位到该传给 <code>bubble()</code> 什么。我们想把 <code>bubble()</code> 的第一个参数也是 void 指针。但这意味着，我们得改变变量 <code>t</code>，因为它现在是整型。另外，在使用 <code>t = p[j-1];</code> 的地方我们需要知道 <code>p[j-1]</code> 的类型，以便于我们知道要拷贝给变量 <code>t</code> （或者是代替 <code>t</code> 的不管什么东西）多少字节。</p>
+<p>现在在 <code>bubble_4.c</code> 中的 <code>bubble()</code>，一些信息，如被存储的数据的类型（即每个元素的大小）可以通过第一个参数是一个整型指针获取到。如果我们想让 <code>bubble()</code> 排序任何类型的数据，我们得把这个指针都转换为 void 指针。但是这样做，我们就会把与之相关的数组元素的大小这些信息丢失掉。因此，我们在 <code>bubble_5.c</code> 中加入额外的参数来处理这一信息。</p>
+<p>相比前面的改进，从 <code>bubble4.c</code> 到 <code>bubble5.c</code> 的改变可能比较多，因此仔细比较一下这 2 个模块的差异。</p>
+<pre><code>    /*---------------------- bubble5.c ---------------------------*/
+    /* Program bubble_5.c from PTRTUT10.HTM 6/13/97 */
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    long arr[10] = { 3,6,1,2,3,8,4,1,7,2};
+    void bubble(void *p, size_t width, int N);
+    int compare(void *m, void *n);
+    int main(void)
+    {
+        int i;
+        putchar('\n');
+        for (i = 0; i &lt; 10; i++)
+        {
+            printf(&quot;%d &quot;, arr[i]);
+        }
+        bubble(arr, sizeof(long), 10);
+        putchar('\n');
+        for (i = 0; i &lt; 10; i++)
+        {
+            printf(&quot;%ld &quot;, arr[i]);
+        }
+        return 0;
+    }
+    void bubble(void *p, size_t width, int N)
+    {
+        int i, j;
+        unsigned char buf[4];
+        unsigned char *bp = p;
+        for (i = N-1; i &gt;= 0; i--)
+        {
+            for (j = 1; j &lt;= i; j++)
+            {
+                if (compare((void *)(bp + width*(j-1)), (void *)(bp + j*width))) /* 1 */
+                {
+                    /* t = p[j-1]; */
+                    memcpy(buf, bp + width*(j-1), width);
+                    /* p[j-1] = p[j]; */
+                    memcpy(bp + width*(j-1), bp + j*width , width);
+                    /* p[j] = t; */
+                    memcpy(bp + j*width, buf, width);
+                }
+            }
+        }
+    }
+    int compare(void *m, void *n)
+    {
+        long *m1, *n1;
+        m1 = (long *)m;
+        n1 = (long *)n;
+        return (*m1 &gt; *n1);
+    }
+    /*--------------------- end of bubble5.c ---------------------*/
+</code></pre>
+
+<p>注意到现在我们把数组的类型从 <code>int</code> 换成了 <code>long</code>，来展示 <code>compare()</code> 需要做出的改变。但在 <code>bubble()</code> 中我们去掉了变量 <code>t</code>（本应该是从 <code>int</code> 换成 <code>long</code> 的）。我加上了一下 4 个无符号字符长的 buffer，它可以存放一个 long（这会在在后面修改）。无符号字符指针 <code>*bp</code> 用于指向要排序的数组的基址，就是数组的第一个元素。</p>
+<p>我们也必须修改传给 <code>compare()</code> 的参数以及交换 2 个元素的方式。使用 <code>memcpy()</code> 和指针符号而不是数组符号能够降低类型敏感。</p>
+<p>再强调一遍，细心比较 <code>bubble5.c</code> 和 <code>bubble4.c</code> 能让你更加理解到底发生了什么以及为什么。</p>
+<p>我们现在看看 <code>bubble6.c</code>，它用和 <code>bubble5.c</code> 一样的 <code>bubble()</code> 函数来排序字符串数组。因为字符串的比较和 long int 的比较不一样，所以我们必须修改比较函数。另外，我删除了 <code>bubble5.c</code> 里面的注释。</p>
+<pre><code>    /*--------------------- bubble6.c ---------------------*/
+    /* Program bubble_6.c from PTRTUT10.HTM 6/13/97 */
+
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    #define MAX_BUF 256
+    char arr2[5][20] = { &quot;Mickey Mouse&quot;,
+                         &quot;Donald Duck&quot;,
+                         &quot;Minnie Mouse&quot;,
+                         &quot;Goofy&quot;,
+                         &quot;Ted Jensen&quot; };
+    void bubble(void *p, int width, int N);
+    int compare(void *m, void *n);
+
+    int main(void)
+    {
+        int i;
+        putchar('\n');
+        for (i = 0; i &lt; 5; i++)
+        {
+            printf(&quot;%s\n&quot;, arr2[i]);
+        }
+        bubble(arr2, 20, 5);
+        putchar('\n\n');
+        for (i = 0; i &lt; 5; i++)
+        {
+            printf(&quot;%s\n&quot;, arr2[i]);
+        }
+        return 0;
+    }
+    void bubble(void *p, int width, int N)
+    {
+        int i, j, k;
+        unsigned char buf[MAX_BUF];
+        unsigned char *bp = p;
+        for (i = N-1; i &gt;= 0; i--)
+        {
+            for (j = 1; j &lt;= i; j++)
+            {
+                k = compare((void *)(bp + width*(j-1)), (void *)(bp +
+                j*width));
+                if (k &gt; 0)
+                {
+                    memcpy(buf, bp + width*(j-1), width);
+                    memcpy(bp + width*(j-1), bp + j*width , width);
+                    memcpy(bp + j*width, buf, width);
+                }
+            }
+        }
+    }
+    int compare(void *m, void *n)
+    {
+        char *m1 = m;
+        char *n1 = n;
+        return (strcmp(m1,n1));
+    }
+    /*------------------- end of bubble6.c ---------------------*/
+</code></pre>
+
+<p><code>bubble()</code> 函数没有改变说明它能够排序不同类型的数据。剩下要做的就是传给 <code>bubble()</code> 我们要使用的比较函数的名字，以使得 <code>bubble()</code> 有真正的通用性。就像数组的名字是数组第一个元素在数据段的地址，函数名也是这个函数在代码段的地址。因此我们需要用一个函数指针，这个例子中是比较函数。函数指针必须要和所指函数的参数数量、参数类型以及返回值类型匹配。这里，我们这样声明函数指针：</p>
+<pre><code>    int (*fptr)(const void *p1, const void *p2);
+</code></pre>
+
+<p>注意，如果我们这样写：</p>
+<pre><code>    int *fptr(const void *p1, const void *p2);
+</code></pre>
+
+<p>只是声明了一个函数原型，它返回一个整型指针。这是因为在 C 里面 <code>()</code> 比 <code>*</code>（指针符号）的优先级高。通过把 <code>()</code> 放在字符串 <code>*fptr</code>两侧，表明我们声明了一个函数指针。</p>
+<p>现在我们修改 <code>bubble()</code> 的声明，给它加上第四个参数--合适类型的函数指针。就变成了这样：</p>
+<pre><code>    void bubble(void *p, int width, int N,
+                int(*fptr)(const void *, const void *));
+</code></pre>
+
+<p>当我们调用 <code>bubble()</code> 的时候，我们加入要用的比较函数名，<code>bubble7.c</code> 展示了怎么用相同的 <code>bubble()</code> 函数来排序不同的数据类型。</p>
+<pre><code>    /*------------------- bubble7.c ------------------*/
+    /* Program bubble_7.c from PTRTUT10.HTM 6/10/97 */
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    #define MAX_BUF 256
+    long arr[10] = { 3,6,1,2,3,8,4,1,7,2};
+    char arr2[5][20] = { &quot;Mickey Mouse&quot;,
+                         &quot;Donald Duck&quot;,
+                         &quot;Minnie Mouse&quot;,
+                         &quot;Goofy&quot;,
+                         &quot;Ted Jensen&quot; };
+    void bubble(void *p, int width, int N,
+    int(*fptr)(const void *, const void *));
+    int compare_string(const void *m, const void *n);
+    int compare_long(const void *m, const void *n);
+
+    int main(void)
+    {
+        int i;
+        puts(&quot;\nBefore Sorting:\n&quot;);
+        for (i = 0; i &lt; 10; i++) /* show the long ints */
+        {
+            printf(&quot;%ld &quot;,arr[i]);
+        }
+        puts(&quot;\n&quot;);
+        for (i = 0; i &lt; 5; i++) /* show the strings */
+        {
+            printf(&quot;%s\n&quot;, arr2[i]);
+        }
+        bubble(arr, 4, 10, compare_long); /* sort the longs */
+        bubble(arr2, 20, 5, compare_string); /* sort the strings */
+        puts(&quot;\n\nAfter Sorting:\n&quot;);
+        for (i = 0; i &lt; 10; i++) /* show the sorted longs */
+        {
+            printf(&quot;%d &quot;,arr[i]);
+        }
+        puts(&quot;\n&quot;);
+        for (i = 0; i &lt; 5; i++) /* show the sorted strings */
+        {
+            printf(&quot;%s\n&quot;, arr2[i]);
+        }
+        return 0;
+    }
+    void bubble(void *p, int width, int N,
+    int(*fptr)(const void *, const void *))
+    {
+        int i, j, k;
+        unsigned char buf[MAX_BUF];
+        unsigned char *bp = p;
+        for (i = N-1; i &gt;= 0; i--)
+        {
+            for (j = 1; j &lt;= i; j++)
+            {
+                k = fptr((void *)(bp + width*(j-1)), (void *)(bp +
+                j*width));
+                if (k &gt; 0)
+                {
+                    memcpy(buf, bp + width*(j-1), width);
+                    memcpy(bp + width*(j-1), bp + j*width , width);
+                    memcpy(bp + j*width, buf, width);
+                }
+            }
+        }
+    }
+    int compare_string(const void *m, const void *n)
+    {
+        char *m1 = (char *)m;
+        char *n1 = (char *)n;
+        return (strcmp(m1,n1));
+    }
+    int compare_long(const void *m, const void *n)
+    {
+        long *m1, *n1;
+        m1 = (long *)m;
+        n1 = (long *)n;
+        return (*m1 &gt; *n1);
+    }
+    /*----------------- end of bubble7.c -----------------*/
+</code></pre>
+
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>"Algorithms in C"</p>
+<p>Robert Sedgewick</p>
+<p>Addison-Wesley</p>
+<p>ISBN 0-201-51425-7&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../epilog/" class="btn btn-neutral float-right" title="尾声">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../chapter9/" class="btn btn-neutral" title="Chapter9 指针与动态分配内存"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../chapter9/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../epilog/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

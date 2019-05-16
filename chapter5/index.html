@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Chapter5 指针与结构体 - C 指针与数组</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Chapter5 \u6307\u9488\u4e0e\u7ed3\u6784\u4f53";
+    var mkdocs_page_input_path = "chapter5.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> C 指针与数组</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../preface/">前言</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../introduction/">介绍</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter1/">Chapter1 什么是指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter2/">Chapter2 指针类型与数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter3/">Chapter3 指针与字符串</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter4/">Chapter4 再谈字符串</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Chapter5 指针与结构体</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter6/">Chapter6 字符串新谈及字符串数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter7/">Chapter7 再谈多维数组</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter8/">Chapter8 指向数组的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter9/">Chapter9 指针与动态分配内存</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../chapter10/">Chapter10 指向函数的指针</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../epilog/">尾声</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">C 指针与数组</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Chapter5 指针与结构体</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>你可能知道，我们可以声明包含不同数据类型的一块数据，被称作结构体声明。例如，一个人事档案包含的结构可能像这样：</p>
+<pre><code>    struct tag {
+        char lname[20]; /* last name */
+        char fname[20]; /* first name */
+        int age; /* age */
+        float rate; /* e.g. 12.75 per hour */
+    };
+</code></pre>
+
+<p>假设在磁盘文件中有一堆这种结构，我们想把每一个都读出来并打印出姓名，以便于我们在文件中生成一个列表。其余的信息并不打印出来。打印的时候用一个函数调用，并传给这个函数一个指向结构体的指针。为了演示方便，这里我只用一个结构体。注意，我们的目标是写出这个函数，而不是读取文件，所以假设你已经知道该怎么读。</p>
+<p>回顾一下，我们可以通过 <code>.</code> 操作符访问结构体成员，像这样：</p>
+<pre><code>    //--------------- program 5.1 ------------------
+    /* Program 5.1 from PTRTUT10.HTM 6/13/97 */
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    struct tag {
+        char lname[20]; /* last name */
+        char fname[20]; /* first name */
+        int age; /* age */
+        float rate; /* e.g. 12.75 per hour */
+    };
+    struct tag my_struct; /* declare the structure my_struct */
+    int main(void)
+    {
+        strcpy(my_struct.lname,&quot;Jensen&quot;);
+        strcpy(my_struct.fname,&quot;Ted&quot;);
+        printf(&quot;\n%s &quot;,my_struct.fname);
+        printf(&quot;%s\n&quot;,my_struct.lname);
+        return 0;
+    }
+    //-------------- end of program 5.1 --------------
+</code></pre>
+
+<p>注意到，这个结构比 C 中常用到的小很多，我们可以给它加好多：</p>
+<pre><code>    date_of_hire;           (没有给出数据类型)
+    date_of_last_raise;
+    last_percent_increase;
+    emergency_phone;
+    medical_plan;
+    Social_S_Nbr;
+    etc.....
+</code></pre>
+
+<p>如果我们有很多员工，处理结构体数据的话肯定是要用函数。例如，我们可能要打印出传到函数的结构体里面的员工姓名。然而，在原始的 C 里面（Kernighan &amp; Ritchie, 1st Edition），不允许传递结构，只能传递结构体的指针。但在 ANSI C 里，是可以传递一个完整的结构体。既然我们是学习指针，所以不再讨论这个。</p>
+<p>不管怎样，如果我们传递一个完整的结构体，那就意味着我们必须从调用函数拷贝这个结构体的全部内容到被调函数里面。在使用栈的系统中，这将会把整个结构体放进栈中。如果结构体过大，这将会遇到麻烦。但传递一个指针过去，便能最小化使用栈空间。</p>
+<p>无论如何，既然是讨论指针，那我们就来谈谈怎样传递一个结构体指针，并在函数里面使用它。</p>
+<p>看看刚才我们说的一种情况：想要一个函数，接受一个结构体指针作为参数，并在函数里面访问该结构体的成员。例如，在我们的示例结构体中打印员工姓名。</p>
+<p>好了，既然知道我们的指针是要指向使用 <code>struct tag</code> 声明的结构体，我们可以这样声明一个结构体指针：</p>
+<pre><code>    struct tag *st_ptr;
+</code></pre>
+
+<p>然后把它指向我们的结构体：</p>
+<pre><code>    st_ptr = &amp;my_struct;
+</code></pre>
+
+<p>现在我们可以通过解引用来访问既定的成员。但是，应该怎么样解逆引用一个结构体指针呢？好吧，假设我们要用这个指针去设置员工的年龄，可以这样写：</p>
+<pre><code>    (*st_ptr).age = 63;
+</code></pre>
+
+<p>仔细看看这个语句，也就是用括号里面的东西代替 <code>st_ptr</code> 指向的东西，即结构体 <code>my_struct</code>。因此，这其实是和 <code>my_struct.age</code> 一样的。</p>
+<p>然而，这是一个十分常用的表达式，因此，C 语言的设计者创建了一个替代语法来做这件事：</p>
+<pre><code>    st_ptr-&gt;age = 63;
+</code></pre>
+
+<p>想想这个，看一下下面的程序：</p>
+<pre><code>    //------------ program 5.2 ---------------------
+    /* Program 5.2 from PTRTUT10.HTM 6/13/97 */
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    struct tag{ /* the structure type */
+        char lname[20];     /* last name */
+        char fname[20];     /* first name */
+        int age;            /* age */
+        float rate;         /* e.g. 12.75 per hour */
+    };
+    struct tag my_struct;           /* define the structure */
+    void show_name(struct tag *p);  /* function prototype */
+
+    int main(void)
+    {
+        struct tag *st_ptr;     /* a pointer to a structure */
+        st_ptr = &amp;my_struct;    /* point the pointer to my_struct */
+        strcpy(my_struct.lname,&quot;Jensen&quot;);
+        strcpy(my_struct.fname,&quot;Ted&quot;);
+        printf(&quot;\n%s &quot;,my_struct.fname);
+        printf(&quot;%s\n&quot;,my_struct.lname);
+        my_struct.age = 63;
+        show_name(st_ptr);      /* pass the pointer */
+        return 0;
+    }
+
+    void show_name(struct tag *p)
+    {
+        printf(&quot;\n%s &quot;, p-&gt;fname); /* p points to a structure */
+        printf(&quot;%s &quot;, p-&gt;lname);
+        printf(&quot;%d\n&quot;, p-&gt;age);
+    }
+    -------------------- end of program 5.2 ----------------
+</code></pre>
+
+<p>再次声明，这里有很多东西需要一次理解，所以读者应该编译运行不同的代码片段，单步调试 main 函数并观察一下 <code>my_struct</code> 和 <code>p</code> 这些变量。并且要进入函数里面看看到底发生了什么。</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../chapter6/" class="btn btn-neutral float-right" title="Chapter6 字符串新谈及字符串数组">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../chapter4/" class="btn btn-neutral" title="Chapter4 再谈字符串"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../chapter4/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../chapter6/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>
